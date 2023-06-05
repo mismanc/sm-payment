@@ -29,27 +29,27 @@ public class PaymentServiceImpl implements PaymentService {
     @Override
     public Payment newPayment(Payment payment) {
         payment.setPaymentState(PaymentState.NEW);
-        return paymentRepository.saveAndFlush(payment);
+        return paymentRepository.save(payment);
     }
+
+    @Override
+    public Payment newPreAuthPayment(Payment payment) {
+        payment.setPaymentState(PaymentState.PRE_AUTH);
+        return paymentRepository.save(payment);
+    }
+
 
     @Override
     public StateMachine<PaymentState, PaymentEvent> preAuth(Long paymentId) {
         StateMachine<PaymentState, PaymentEvent> sm = buildWithId(paymentId);
-        sendEvent(paymentId, sm, PaymentEvent.PRE_AUTH_APPROVED);
+        sendEvent(paymentId, sm, PaymentEvent.PRE_AUTHORIZE);
         return sm;
     }
 
     @Override
     public StateMachine<PaymentState, PaymentEvent> authPayment(Long paymentId) {
         StateMachine<PaymentState, PaymentEvent> sm = buildWithId(paymentId);
-        sendEvent(paymentId, sm, PaymentEvent.AUTH_APPROVED);
-        return sm;
-    }
-
-    @Override
-    public StateMachine<PaymentState, PaymentEvent> declineAuth(Long paymentId) {
-        StateMachine<PaymentState, PaymentEvent> sm = buildWithId(paymentId);
-        sendEvent(paymentId, sm, PaymentEvent.AUTH_DECLINED);
+        sendEvent(paymentId, sm, PaymentEvent.AUTHORIZE);
         return sm;
     }
 
