@@ -18,10 +18,11 @@ import java.util.Optional;
 @Service
 public class PaymentServiceImpl implements PaymentService {
 
-    private static final String PAYMENT_ID_HEADER = "payment_id";
+    public static final String PAYMENT_ID_HEADER = "payment_id";
 
     private final PaymentRepository paymentRepository;
     private final StateMachineFactory<PaymentState, PaymentEvent> stateMachineFactory;
+    private final PaymentStateChangeInterceptor stateChangeInterceptor;
 
     @Override
     public Payment newPayment(Payment payment) {
@@ -60,9 +61,13 @@ public class PaymentServiceImpl implements PaymentService {
         if (paymentOptional.isPresent()) {
             StateMachine<PaymentState, PaymentEvent> sm = stateMachineFactory.getStateMachine(paymentOptional.get().getId().toString());
             sm.stop();
-            sm.getStateMachineAccessor().doWithAllRegions(sma -> sma.resetStateMachine(new DefaultStateMachineContext<>(paymentOptional.get().getPaymentState(), null, null, null)));
+            sm.getStateMachineAccessor().doWithAllRegions(sma -> {
+                sma.addStateMachineInterceptor(stateChangeInterceptor);
+                sma.resetStateMachine(new DefaultStateMachineContext<>(paymentOptional.get().getPaymentState(), null, null, null));
+            });
             sm.start();
             return sm;
         }
+        return null;
     }
 }
