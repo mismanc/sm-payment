@@ -13,6 +13,7 @@ import org.springframework.statemachine.StateMachine;
 import java.math.BigDecimal;
 import java.util.Optional;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @SpringBootTest
@@ -34,9 +35,11 @@ class PaymentServiceImplTest {
     @Test
     void preAuth(){
         Payment savedPayment = paymentService.newPayment(payment);
+        assertEquals(savedPayment.getPaymentState(), PaymentState.NEW);
         StateMachine<PaymentState, PaymentEvent> sm = paymentService.preAuth(savedPayment.getId());
         Optional<Payment> preAuthPayment = paymentRepository.findById(savedPayment.getId());
         assertTrue(preAuthPayment.isPresent());
+        assertEquals(preAuthPayment.get().getPaymentState(), PaymentState.PRE_AUTH);
         System.out.println(sm.getState().getId());
         System.out.println(preAuthPayment.get());
     }
