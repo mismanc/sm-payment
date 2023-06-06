@@ -68,39 +68,4 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<PaymentSta
         config.withConfiguration().listener(adapter);
     }
 
-    /*
-    public Action<PaymentState, PaymentEvent> authAct() {
-        return context -> {
-            System.out.println("Auth was called !! ");
-            int random = new Random().nextInt(10);
-            System.out.println("Random is: " + random);
-            if (random < 5) {
-                System.out.println("Auth Approved");
-                context.getStateMachine().sendEvent(MessageBuilder.withPayload(PaymentEvent.AUTH_APPROVED)
-                        .setHeader(PaymentServiceImpl.PAYMENT_ID_HEADER, context.getMessageHeader(PaymentServiceImpl.PAYMENT_ID_HEADER)).build());
-            } else {
-                System.out.println("Auth Declined !! ");
-                context.getStateMachine().sendEvent(MessageBuilder.withPayload(PaymentEvent.AUTH_DECLINED)
-                        .setHeader(PaymentServiceImpl.PAYMENT_ID_HEADER, context.getMessageHeader(PaymentServiceImpl.PAYMENT_ID_HEADER)).build());
-            }
-        };
-    }
-
-    public Action<PaymentState, PaymentEvent> preAuthAction() {
-        return context -> {
-            System.out.println("PreAuth was called !! ");
-            int random = new Random().nextInt(10);
-            System.out.println("Random is: " + random);
-            if (random < 5) {
-                System.out.println("Approved");
-                context.getStateMachine().sendEvent(MessageBuilder.withPayload(PaymentEvent.PRE_AUTH_APPROVED)
-                        .setHeader(PaymentServiceImpl.PAYMENT_ID_HEADER, context.getMessageHeader(PaymentServiceImpl.PAYMENT_ID_HEADER)).build());
-            } else {
-                System.out.println("Declined !! ");
-                context.getStateMachine().sendEvent(MessageBuilder.withPayload(PaymentEvent.PRE_AUTH_DECLINED)
-                        .setHeader(PaymentServiceImpl.PAYMENT_ID_HEADER, context.getMessageHeader(PaymentServiceImpl.PAYMENT_ID_HEADER)).build());
-            }
-        };
-    }
-     */
 }
