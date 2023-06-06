@@ -36,7 +36,7 @@ public class StateMachineConfig extends StateMachineConfigurerAdapter<PaymentSta
     public void configure(StateMachineStateConfigurer<PaymentState, PaymentEvent> states) throws Exception {
         states.withStates().initial(PaymentState.NEW).states(EnumSet.allOf(PaymentState.class))
                 .end(PaymentState.AUTH)
-                .end(PaymentState.PRE_AUTH)
+                .end(PaymentState.PRE_AUTH_ERROR)
                 .end(PaymentState.AUTH_ERROR);
     }
 
